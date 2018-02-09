@@ -2,12 +2,16 @@
 
 {% block content %}
 
-artist_add
-<!--<ul>-->
-    <!--{% for artist in artists %}-->
-    <!--<li>-->
-        <!--{{ artist.name }}-->
-    <!--</li>-->
-    <!--{% endfor %}-->
-<!--</ul>-->
+<div>
+    <h1>artist_add
+    </h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input type="text" name="name">
+        <button type="submit">등록</button>
+
+        <!-- 3. 전송받은 name을 이용해서 Artist를 생성 -->
+        <!-- 이후 'artist:artist-list'로 redirect -->
+    </form>
+</div>
 {% endblock %}
