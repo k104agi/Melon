@@ -48,7 +48,7 @@ class Song(models.Model):
         # TWICE(트와이스) - Heart Shaker (Merry & Happy)
         # 휘성, 김태우 - 호호호빵 (호호호빵)
         return '{artists} - {title} ({album})'.format(
-            artists=', '.join(self.album.values_list('name', flat=True)),
+            artists=', '.join(self.artists.values_list('name', flat=True)),
             title=self.title,
             album=self.album.title,
         )

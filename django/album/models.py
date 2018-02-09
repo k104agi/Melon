@@ -22,7 +22,7 @@ class Album(models.Model):
     @property
     def genre(self):
         # 장르는 가지고 있는 노래에서 가져오기
-        return ''
+        return ', '.join(self.song_set.values_list('genre', flat=True).distinct())
 
     def __str__(self):
         # 호호호빵 [휘성 (Realslow), 김태우]
