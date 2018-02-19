@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 <div>
-    <form action="" method="post" name="keyword">
+    <form action="" method="post">
         {% csrf_token %}
-        <input type="text">
+        <input type="text" name="keyword">
         <button type="submit">
             검색
         </button>

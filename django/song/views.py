@@ -1,6 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+
+from album.models import Album
+from artist.models import Artist
 from song.models import Song
+from django.db.models import Q
 
 
 # song_list 만들기
@@ -40,15 +44,26 @@ def song_search(request):
     """
 
     context = {}
+
+    # Song과 연결된 Artist의 name에 keyword가 포함되는 경우
+    # Song과 연결된 Album의 name에 keyword가 포함되는 경우
+    # 두 경우를 모두 포함(or -> Q object)하는 쿼리셋을 'songs'에 할당
+    # 밑의 Song.objects.filter에 붙은거를 or로 바꾸기
+    # Song의 title에 keyword가 포함되는 경우까지 합쳐서 3개를 or로 조건달기
+    # 오늘 마지막으로 본 문서 찾아서 만들기
+
     if request.method == 'POST':
         # POST 요청에 전달된 데이터(input요소의 값들)중,
         # name이 'keyword'인 input의 값
         keyword = request.POST['keyword'].strip()
-        #strip은 양쪽 공백을 없앤 결과를 나타낸다?
-
+        # strip은 양쪽 공백을 없앤 결과를 나타낸다?
         if keyword:
-            # Song 목록 중 title이 keyword를 포함하는 쿼리셋
-            songs = Song.objects.filter(title__contains=keyword)
+            songs = Song.objects.filter(
+                Q(album__title__contains=keyword) |
+                Q(album__artists__name__contains=keyword) |
+                # Song 목록 중 title이 keyword를 포함하는 쿼리셋
+                Q(title__contains=keyword)
+            ).distinct()
             context['songs'] = songs
         # 만약 method가 POST였다면 context에 'songs'가 채워진 상태
         # GET이면 빈 상태로 render 실행
