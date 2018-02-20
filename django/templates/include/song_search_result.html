@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
-{% block content %}
-
+<!-- 여긴 왜 extends 안 써도 됨? 내용 가져가서 그런가? -->
 <!-- icnlude와 with문을 사용 -->
+
 <h3>{{ type }}명이 포함</h3>
+
 <ul>
     {% for song in songs %}
     <li>
@@ -10,5 +10,3 @@
     </li>
     {% endfor %}
 </ul>
-
-{% endblock %}

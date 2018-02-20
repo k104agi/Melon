@@ -1,8 +1,8 @@
-from collections import namedtuple
+from typing import NamedTuple
+from django.db.models import Q
 
 from django.shortcuts import render
 from .models import Song
-from django.db.models import Q
 
 
 # song_list 만들기
@@ -58,73 +58,95 @@ def song_search(request):
     }
     keyword = request.GET.get('keyword')
 
+    class SongInfo(NamedTuple):
+        type: str
+        q: Q
+
     if keyword:
-        # Song과 연결된 Artist의 name에 keyword가 포함되는 경우
-        songs_from_artists = Song.objects.filter(
-            album__artists__name__contains=keyword)
-
-        # album name에 keyword
-        songs_from_albums = Song.objects.filter(
-            album__title__contains=keyword)
-
-        # title name에 keyword
-        songs_from_title = Song.objects.filter(
-            title__contains=keyword)
-        # 만약 method가 POST였다면 context에 'songs'가 채워진 상태
-        # GET이면 빈 상태로 render 실행
-
-        # 방법 1
-        # for문 순회하며 append()하는 부분이 한 번만 쓰이도록
-        # zip을 활용
-        # for type, songs in zip(
-        #         ('아티스트', '앨범', '노래제목'),
-        #         (songs_from_artists, songs_from_albums, songs_from_title)):
-        #     context['song_infos'].append({
-        #     'type': type,
-        #     'songs': songs
-        #     })
-
-        # 방법 2
         song_infos = (
-            ('아티스트', songs_from_artists),
-            ('앨범', songs_from_albums),
-            ('노래제목', songs_from_title)
+            SongInfo(
+                type='아티스트명',
+                q=Q(album__artists__name__contains=keyword)),
+            SongInfo(
+                type='앨범명',
+                q=Q(album__title__contains=keyword)),
+            SongInfo(
+                type='노래제목',
+                q=Q(title__name__contains=keyword)),
         )
-        for type, songs in song_infos:
+        for type, q in song_infos:
             context['song_infos'].append({
-                'type': type,
-                'songs': songs
+                'type':type,
+                'songs':Song.objects.filter(q),
             })
+    return render(request, 'song/song_search.html', context)
 
-        # 방법3
-        # filter 뒤의 조건을 Q Object로 만들어서 아래 for 문에서 사용하기
-        # q = Q(title__contains=keyword)
-        # Song.objects.filter(q)
 
-        # if keyword 하의 내용을 다음과 같이 바꿈
-        # song_infos = (Q Song.objects.filter(
-        #     album__artists__name__contains=keyword)
+            # # Song과 연결된 Artist의 name에 keyword가 포함되는 경우
+            # songs_from_artists = Song.objects.filter(
+            #     album__artists__name__contains=keyword)
+            #
+            # # album name에 keyword
+            # songs_from_albums = Song.objects.filter(
+            #     album__title__contains=keyword)
+            #
+            # # title name에 keyword
+            # songs_from_title = Song.objects.filter(
+            #     title__contains=keyword)
+            # # 만약 method가 POST였다면 context에 'songs'가 채워진 상태
+            # # GET이면 빈 상태로 render 실행
+            #
+            # # 방법 1
+            # # for문 순회하며 append()하는 부분이 한 번만 쓰이도록
+            # # zip을 활용
+            # # for type, songs in zip(
+            # #         ('아티스트', '앨범', '노래제목'),
+            # #         (songs_from_artists, songs_from_albums, songs_from_title)):
+            # #     context['song_infos'].append({
+            # #     'type': type,
+            # #     'songs': songs
+            # #     })
+            #
+            # # 방법 2
+            # song_infos = (
+            #     ('아티스트', songs_from_artists),
+            #     ('앨범', songs_from_albums),
+            #     ('노래제목', songs_from_title)
+            # )
+            # for type, songs in song_infos:
+            #     context['song_infos'].append({
+            #         'type': type,
+            #         'songs': songs
+            #     })
 
-        # 방법 4
-        # namedtuple(네임드튜플) 사용하기
-        # class SongInfo(NamedTuple):
-        #   type: str
-        #   q: Q
-        #     context = {'song_infos': [], }
-        #     keyword = request.GET.get('keyword')
-        #     SongInfo = namedtuple('SongInfo', ['type', 'q'])
-        #
-        #     if keyword:
-        #         song_infos=(
-        #             SongInfo(
-        #                 type='아티스트명',
-        #                 q=Q(album__artists__name__contains=keyword)),            )
-        #             )
-        #
-        #     for type ~~
+            # 방법3
+            # filter 뒤의 조건을 Q Object로 만들어서 아래 for 문에서 사용하기
+            # q = Q(title__contains=keyword)
+            # Song.objects.filter(q)
 
-        return render(request, 'song/song_search.html', context)
+            # if keyword 하의 내용을 다음과 같이 바꿈
+            # song_infos = (Q Song.objects.filter(
+            #     album__artists__name__contains=keyword)
 
+            # 방법 4
+            # namedtuple(네임드튜플) 사용하기
+            # class SongInfo(NamedTuple):
+            #   type: #str
+            #   q: Q
+            #     context = {'song_infos': [], }
+            #     keyword = request.GET.get('keyword')
+            #     SongInfo = namedtuple('SongInfo', ['type', 'q'])
+            #
+            #     if keyword:
+            #         song_infos=(
+            #             SongInfo(
+            #                 type='아티스트명',
+            #                 q=Q(album__artists__name__contains=keyword)),            )
+            #             )
+            #
+            #     for type ~~
+
+            #return render(request, 'song/song_search.html', context)
 
 
 
