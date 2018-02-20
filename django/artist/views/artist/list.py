@@ -1,3 +1,13 @@
+from django.shortcuts import render
+
+from artist.models import Artist
+
+__all__ = (
+    'artist_list',
+)
+
+
+
 def artist_list(requests):
     # 전체 Artist 목록을 ul>li로 출력
     # 템플릿은 'artist/artist_list.html'을 사용
