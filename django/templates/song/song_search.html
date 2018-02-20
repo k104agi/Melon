@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div>
-    <form action="" method="post">
+    <form action="" method="get">
         {% csrf_token %}
         <input type="text" name="keyword">
         <button type="submit">
@@ -9,12 +9,32 @@
         </button>
     </form>
 
+    <h3>아티스트명이 일치</h3>
     <ul>
-        {% for song in songs %}
+        {% for song in songs_from_artists %}
         <li>
             {{ song.title }}
         </li>
         {% endfor %}
     </ul>
+
+    <h3>앨범명에 포함</h3>
+    <ul>
+        {% for song in songs_from_title %}
+        <li>
+            {{ song.title }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h3>노래제목에 포함</h3>
+    <ul>
+        {% for song in songs_from_title %}
+        <li>
+            {{ song.title }}
+        </li>
+        {% endfor %}
+    </ul>
+
 </div>
 {% endblock %}
