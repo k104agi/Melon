@@ -1,8 +1,6 @@
 import re
 
-__all__ = (
-    'get_dict_from_dl',
-)
+__all__ = ('get_dict_from_dl',)
 
 
 def _dl_generator(dl, first_text=False):

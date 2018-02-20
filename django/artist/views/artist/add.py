@@ -4,9 +4,7 @@ from artist.models import Artist
 
 
 
-__all__ = (
-    'artist_add',
-)
+__all__ = ('artist_add',)
 
 
 def artist_add(request):

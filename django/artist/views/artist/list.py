@@ -2,9 +2,7 @@ from django.shortcuts import render
 
 from artist.models import Artist
 
-__all__ = (
-    'artist_list',
-)
+__all__ = ('artist_list',)
 
 
 

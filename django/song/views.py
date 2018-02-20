@@ -58,11 +58,11 @@ def song_search(request):
     }
     keyword = request.GET.get('keyword')
 
-    class SongInfo(NamedTuple):
-        type: str
-        q: Q
-
     if keyword:
+        class SongInfo(NamedTuple):
+            type: str
+            q: Q
+
         song_infos = (
             SongInfo(
                 type='아티스트명',
@@ -72,17 +72,26 @@ def song_search(request):
                 q=Q(album__title__contains=keyword)),
             SongInfo(
                 type='노래제목',
-                q=Q(title__name__contains=keyword)),
+                q=Q(title__contains=keyword)),
         )
         for type, q in song_infos:
             context['song_infos'].append({
-                'type':type,
-                'songs':Song.objects.filter(q),
+                'type': type,
+                'songs': Song.objects.filter(q),
             })
     return render(request, 'song/song_search.html', context)
 
+def song_add_from_melon(request):
+    # 패키지 분할 (artist랑 똑같은 형태로)
+    # artist_add_from_melon과 같은 기능을 함
+    #   song_search_from_melon도 구현
+    #       -> 이 안에 'DB에 추가'하는 Form구현
+    pass
 
-            # # Song과 연결된 Artist의 name에 keyword가 포함되는 경우
+
+
+
+        # # Song과 연결된 Artist의 name에 keyword가 포함되는 경우
             # songs_from_artists = Song.objects.filter(
             #     album__artists__name__contains=keyword)
             #
