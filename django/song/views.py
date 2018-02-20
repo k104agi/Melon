@@ -77,3 +77,4 @@ def song_search(request):
         # 만약 method가 POST였다면 context에 'songs'가 채워진 상태
         # GET이면 빈 상태로 render 실행
     return render(request, 'song/song_search.html', context)
+

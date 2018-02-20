@@ -21,6 +21,6 @@ urlpatterns = [
     #artist/로 시작하는 path가
     #artist.urls모듈을 include하도록 설정
     path('artist/', include('artist.urls')),
-    path('song/', include('song.urls' )),
+    path('song/', include('song.urls')),
     path('album/', include('album.urls')),
 ]
