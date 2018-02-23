@@ -1,4 +1,4 @@
-#아티스트 정보를 크롤링해서 가져오는 함수
+# 아티스트 정보를 크롤링해서 가져오는 함수
 
 import requests
 from bs4 import BeautifulSoup, NavigableString
@@ -20,6 +20,24 @@ def require_detail(f):
 
     return wrap
 
+
+# 감싸는 함수를 만들어서 property에 붙여줌
+# 하는 기능은 만약 return해줄 정보가 없다면 get_detail()로 만들어주는 것
+# 그리고 다시 return해줌
+# if not 정보: 이기 때문에 정보가 이미 들어가있다면 실행되지 않음
+
+# 프로퍼티마다 '~없으면 이렇게 해라~'하는 함수를 붙이기엔 비효율적이라서
+# 이렇게 하나를 만들어놓고 그걸 여러번 쓰는것임(내용압축)
+# 여기서 형태는 프로퍼티(속성값)이지만
+# 실제로는 require_detail이 들어가서 get_detail 해주는 함수역할을 함
+
+# 다른 형태 예시
+# def abc(self, arg):
+#    return arg
+# decorated_function_abc = require_detail(abc)
+# decorated_function_abc("ABCDEFG")
+
+# python decorator로 검색하면 나옴
 
 class ArtistData:
     def __init__(self, artist_id, name='', url_img_cover=''):
@@ -101,6 +119,9 @@ class ArtistData:
             self._related_information = related_information_dict
 
         self.detail = True
+
+
+
 
     @require_detail
     def show_info(self):

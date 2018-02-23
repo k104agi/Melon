@@ -28,6 +28,7 @@ class AlbumData:
         soup = BeautifulSoup(response.text)
         info = soup.select_one('div.section_info')
         entry = info.select_one('div.entry')
+
         src = info.select_one('div.thumb img').get('src')
 
         title = entry.select_one('div.info > .song_name').contents[2].strip()

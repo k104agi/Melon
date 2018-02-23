@@ -6,8 +6,8 @@ import requests
 from django.core.files import File
 from django.db import models
 
-
 from crawler.artist import ArtistData
+from utils.file import get_buffer_ext, download
 
 
 class ArtistManager(models.Manager):
@@ -43,8 +43,11 @@ class ArtistManager(models.Manager):
         temp_file = BytesIO()
         # temp_file에 이진데이터를 기록
         temp_file.write(binary_data)
+
         # 파일객체의 포인터를 시작부분으로 되돌림
-        temp_file.seek(0)
+        # temp_file.seek(0)
+        # 해보니 위 seek 이 없어도 저장됨..
+        # url 뒤에 붙어서 확장자 이상하게 저장되는 것만 막으면 됨
 
         artist, artist_created = self.update_or_create(
             melon_id=artist_id,
@@ -58,8 +61,13 @@ class ArtistManager(models.Manager):
                 'blood_type': blood_type,
             }
         )
-        # img_profile필드에 저장할 파일명을 전체 URL경로에서 추출 (Path라이브러리)
-        file_name = Path(url_img_cover).name
+
+        temp_file = download(url_img_cover)
+        file_name = '{artist_id}.{ext}'.format(
+            artist_id=artist_id,
+            ext=get_buffer_ext(temp_file),
+        )
+
         # artist.img_profile필드의 save를 따로 호출, 이름과 File객체를 전달
         #   (Django)File객체의 생성에는 (Python)File객체를 사용,
         #           이 때 (Python)File객체처럼 취급되는 BytesIO를 사용

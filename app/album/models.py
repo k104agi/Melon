@@ -6,6 +6,7 @@ from django.core.files import File
 from django.db import models
 
 from crawler.album import AlbumData
+from utils.file import get_buffer_ext, download
 
 
 class AlbumManager(models.Manager):
@@ -21,12 +22,11 @@ class AlbumManager(models.Manager):
             }
         )
 
-        response = requests.get(album_data.url_img_cover)
-        binary_data = response.content
-        temp_file = BytesIO()
-        temp_file.write(binary_data)
-        temp_file.seek(0)
-        file_name = Path(album_data.url_img_cover).name
+        temp_file = download(album_data.url_img_cover)
+        file_name = '{album_id}.{ext}'.format(
+            album_id=album_id,
+            ext=get_buffer_ext(temp_file),
+        )
         album.img_cover.save(file_name, File(temp_file))
         return album, album_created
 

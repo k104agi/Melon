@@ -34,6 +34,11 @@ class SongManager(models.Manager):
             song.artists.add(artist)
             return song, song_created
 
+        temp_file = download(song.url_img_cover)
+        file_name = '{artist_id},{ext}'.format(
+            artist_id=artist_id,
+            ext=get_buffer_ext(temp_file),
+        )
 
 class Song(models.Model):
     melon_id = models.CharField('멜론 Song ID', max_length=20, blank=True, null=True, unique=True)
