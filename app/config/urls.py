@@ -18,29 +18,29 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from config import views
-from members.views import login_view, logout_view, signup_view
+from members.views import login_view, signup_view, logout_view
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #artist/로 시작하는 path가
-    #artist.urls모듈을 include하도록 설정
+    # artist/로 시작하는 path가
+    # artist.urls모듈을 include하도록 설정
     path('', views.index, name='index'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('signup/', signup_view, name='signup'),
+
     path('artist/', include('artist.urls')),
-    path('song/', include('song.urls')),
     path('album/', include('album.urls')),
+    path('song/', include('song.urls')),
 
     # include
     # song/
     # album/
 ]
-
 # settings.MEDIA_URL('/media/')로 시작하는 요청은
 # document_root인 settings.MEDIA_ROOT폴더(ROOT_DIR/.media)에서 파일을 찾아 리턴해준다
 urlpatterns += static(
     settings.MEDIA_URL,
     document_root=settings.MEDIA_ROOT,
-    )
+)
