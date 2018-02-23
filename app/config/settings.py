@@ -20,9 +20,11 @@ MEDIA_ROOT = os.path.join(ROOT_DIR, '.media')
 MEDIA_URL = '/media/'
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    STATIC_DIR ,
+    STATIC_DIR,
 ]
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'members.User'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'album',
     'artist',
     'song',
+    'members',
 ]
 
 MIDDLEWARE = [
@@ -92,8 +95,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'fc-melon',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'USER': 'kjs',
+        'PASSWORD': 'gozldshsh1!',
     }
 }
 
